@@ -1,5 +1,5 @@
 const port = 8080;
-// const db = require('./db');
+const db = require('./db');
 const morgan = require('morgan');
 const cors = require('cors');
 const express = require('express');
@@ -15,12 +15,27 @@ app.get('/', (req, res) => {
 );
 
 app.post('/login', (req, res) => {
-    const { username, password } = req.body;
-    if (username === 'admin' && password === 'admin') {
-        res.send('Login success');
-    } else {
-        res.send('Login failed');
-    }
+    const { userName, password } = req.body;
+    console.log('userName:', userName);
+    console.log('password:', password);
+
+    db.login(userName, password, (err, result) => {
+        if (err) {
+            console.error('Error:', err);
+            res.status(500).send('Login failed');
+            return;
+        }
+
+        if (result.length === 0) {
+            console.log('No user found');
+            res.status(401).send('Login failed');
+            return;
+        }
+
+        console.log('User found:', result[0]);
+        res.status(200).send('Login successful');
+    });
+    
 });
 
 app.listen(port, () => {

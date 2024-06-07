@@ -1,10 +1,11 @@
-const mysql = require("mysql");
+const mysql = require("mysql2");
 
 const db = mysql.createConnection({
-  host: "",
-  user: "",
-  password: "",
-  database: "",
+  host: "localhost",
+  user: "root",
+  password: "Nm139200",
+  database: "webA",
+  port: 3306,
 });
 
 db.connect((err) => {
@@ -16,7 +17,7 @@ db.connect((err) => {
 });
 
 const getUsers = (callback) => {
-  db.query("SELECT * FROM users", (err, result) => {
+  db.query("SELECT * FROM users;", (err, result) => {
     if (err) {
       callback(err, null);
       return;
@@ -25,6 +26,22 @@ const getUsers = (callback) => {
   });
 };
 
+const login = (user_name, password, callback) => {
+  db.query(
+    `SELECT * FROM users WHERE user_name = '${user_name}' AND password = '${password}';`,
+    (err, result) => {
+      if (err) {
+        callback(err, null);
+        console.log('got error');
+        return;
+      }
+      callback(null, result);
+      console.log('got result');
+    }
+  );
+};
+
 module.exports = {
   getUsers,
+  login,
 };

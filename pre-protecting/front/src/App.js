@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import './App.css';
 
 function Login() {
-  const [email, setEmail] = useState('');
+  const [userName, setUserName] = useState('');
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
 
@@ -17,14 +17,16 @@ function Login() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ userName, password }),
       });
+
+      console.log('Response:', response);
 
       if (!response.ok) {
         throw new Error('Login failed');
       }
 
-      const data = await response.json();
+      const data = await response.text;
       console.log('Login successful:', data);
       setMessage('Login successful!');
       // Handle successful login (e.g., save token, redirect)
@@ -40,11 +42,11 @@ function Login() {
       <form className="login-form" onSubmit={handleSubmit}>
         <h2>Login</h2>
         <div className="form-group">
-          <label>Email:</label>
+          <label>User Name:</label>
           <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            type="text"
+            value={userName}
+            onChange={(e) => setUserName(e.target.value)}
             required
           />
         </div>
