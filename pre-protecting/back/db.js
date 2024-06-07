@@ -3,7 +3,7 @@ const mysql = require("mysql2");
 const db = mysql.createConnection({
   host: "localhost",
   user: "root",
-  password: "Nm139200",
+  password: process.env.DB_PASSWORD || "password",
   database: "webA",
   port: 3306,
 });
@@ -32,11 +32,9 @@ const login = (user_name, password, callback) => {
     (err, result) => {
       if (err) {
         callback(err, null);
-        console.log('got error');
         return;
       }
       callback(null, result);
-      console.log('got result');
     }
   );
 };

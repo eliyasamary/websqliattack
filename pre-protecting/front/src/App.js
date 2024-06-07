@@ -26,7 +26,7 @@ function Login() {
         throw new Error('Login failed');
       }
 
-      const data = await response.text;
+      const data = await response.json();
       console.log('Login successful:', data);
       setMessage('Login successful!');
       // Handle successful login (e.g., save token, redirect)
