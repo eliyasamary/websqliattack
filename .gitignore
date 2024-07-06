@@ -16,6 +16,7 @@
 
 # Ignore log files
 *.log
+*.txt
 
 # Ignore temporary files
 *.tmp
@@ -32,3 +33,4 @@ Thumbs.db
 # Ignore backup files
 *.bak
 *.swp
+*.pyc
