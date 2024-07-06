@@ -12,6 +12,12 @@ def close_log_file():
     if file:
         file.close()
 
+def log_message(message):
+    global file
+    if file:
+        file.write(f"{message}\n")
+        print(message)
+
 def log_response(response_text):
     global file
     if file:

