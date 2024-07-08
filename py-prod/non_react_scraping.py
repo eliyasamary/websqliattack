@@ -5,7 +5,7 @@ def non_react_scrape(url):
     result = requests.get(url)
     soup = BeautifulSoup(result.text, 'lxml')
     
-    form_objects = soup.findAll('form')
+    # form_objects = soup.findAll('form')
 
     form_objects = []
 

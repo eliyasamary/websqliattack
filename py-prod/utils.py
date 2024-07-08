@@ -17,8 +17,8 @@ def check_if_react(url):
     bundle_res = find_regex_in_soup(soup, "js/bundle.js")
     menifest_res = find_regex_in_soup(soup, "manifest.json")
 
-    print(len(bundle_res))
-    print(len(menifest_res))
+    # print(len(bundle_res))
+    # print(len(menifest_res))
 
     if len(bundle_res) > 0:
         is_react = True
