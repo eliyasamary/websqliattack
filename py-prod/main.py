@@ -1,7 +1,7 @@
 from utils import check_if_react
 from non_react_scraping import non_react_scrape
 from react_scraping import react_scraping
-from non_blind_generator import non_blind
+from blind_generator import blind
 import logger
 import time
 from datetime import datetime
@@ -43,7 +43,7 @@ else :
 print(forms)
 
 for form in forms:
-    non_blind(form)
+    blind(form)
     
 logger.log_end_stamp()
     

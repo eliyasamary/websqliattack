@@ -1,6 +1,5 @@
 import requests
 import time
-import random
 import logger
 
 class TestPayloadException(Exception):
@@ -52,7 +51,7 @@ def test_payload(form, param, load, char):
     # Check if the login was successful based on response text
     return "Login successful" in response.text
 
-def non_blind(form):
+def blind(form):
     max_password_length = 20  # Set a reasonable limit for the password length
     max_runtime = 60  # Maximum total runtime in seconds (10 minutes)
     max_attempts_per_char = 50  # Maximum number of attempts per character position
