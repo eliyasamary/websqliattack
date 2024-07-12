@@ -11,7 +11,7 @@ def react_scraping(input_url):
     service = Service(executable_path=chromedriver_path)
 
     # Initialize the WebDriver with the specified path
-    driver = webdriver.Chrome()
+    driver = webdriver.Chrome(service=service)
 
     # Open a webpage
     driver.get(input_url)
