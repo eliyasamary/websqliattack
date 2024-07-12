@@ -14,6 +14,8 @@
 /pre-protecting/back/node_modules/
 /pre-protecting/back/vendor/
 
+/post-protecting/back/node_modules/
+/post-protecting/back/vendor/
 # Ignore log files
 *.log
 *.txt
