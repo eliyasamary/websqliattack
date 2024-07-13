@@ -39,5 +39,5 @@ const login = (user_name, password, callback) => {
 
 module.exports = {
   getUsers,
-  login,
+  login,
 };

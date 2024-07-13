@@ -1,0 +1,16 @@
+payloads = {
+    "basic": "a12345678",
+    "name": "John Doe",
+    "firstName": "John",
+    "lastName": "Doe",
+    "first_name": "John",
+    "last_name": "Doe",
+    "userName": "Asaf",
+    "username": "admin",  
+    "user_name": "admin", 
+    "user": "admin", 
+    "email": "johndoe@example.com",
+    "mail": "johndoe@example.com",
+    "password": "securepassword123",
+    "pass": "securepassword123",
+}

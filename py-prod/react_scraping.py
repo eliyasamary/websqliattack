@@ -4,6 +4,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 import time
 import json
+from gloabls import payloads
 
 def react_scraping(input_url):    
     chromedriver_path = "C:\\Program Files\\ChromeDriver\\chromedriver.exe"
@@ -18,14 +19,6 @@ def react_scraping(input_url):
     time.sleep(2)  # Wait for the page to load
     
     forms = driver.find_elements(By.TAG_NAME, "form")
-
-    payloads = {
-        "basic": "a123",
-        "name": "John Doe",
-        "userName": "Asaf",
-        "email": "john.doe@example.com",
-        "password": "securepassword123"
-    }
 
     form_objects = []
 

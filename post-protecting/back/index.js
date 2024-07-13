@@ -1,7 +1,6 @@
 require("dotenv").config();
 const port = 8080;
-const { User } = require("./db");
-const { Sequelize } = require('sequelize');
+const { sequelize, User } = require("./db");
 const morgan = require("morgan");
 const cors = require("cors");
 const express = require("express");
@@ -52,8 +51,7 @@ app.post("/login", validateLogin, async (req, res) => {
     res.status(500).send("Login failed");
   }
 });
-Sequelize.sync().then(() => {
-  app.listen(port, () => {
-    console.log('Server is running on http://localhost:${port}');
-  });
+
+app.listen(port, () => {
+  console.log(`Server is running on http://localhost:${port}`);
 });

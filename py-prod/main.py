@@ -3,15 +3,10 @@ from non_react_scraping import non_react_scrape
 from react_scraping import react_scraping
 from blind_generator import blind
 import logger
-import time
 from datetime import datetime
 
-# Get current timestamp
 current_timestamp = datetime.now().timestamp()
-
-# Convert timestamp to a human-readable format
 human_readable_time = datetime.fromtimestamp(current_timestamp).strftime('%Y-%m-%d %H:%M:%S')
-
 file_readable_time = datetime.fromtimestamp(current_timestamp).strftime('%d-%m-%Y_%H-%M-%S')
 
 filename = f"file-{file_readable_time}.txt"
