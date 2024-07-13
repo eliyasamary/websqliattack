@@ -47,7 +47,7 @@ def react_scraping(input_url):
         except:
             print("No submit button found in form")
         
-        time.sleep(2)  # Wait for the form submission to process
+        time.sleep(5)  # Wait for the form submission to process
 
         # Capture requests
         for request in driver.requests:

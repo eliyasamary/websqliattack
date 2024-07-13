@@ -31,12 +31,11 @@ if is_react == False:
     print("Not React Option")
 
     forms = non_react_scrape(input_url)
-    
+
 elif is_react == True:
     print("React Option")
 
     forms = react_scraping(input_url)
-
 else :
     print("Error")
 

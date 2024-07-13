@@ -1,6 +1,6 @@
 require("dotenv").config();
 const port = 8080;
-const { sequelize, User } = require("./db");
+const db = require("./db");
 const morgan = require("morgan");
 const cors = require("cors");
 const express = require("express");
@@ -32,19 +32,26 @@ app.get("/", (req, res) => {
 app.post("/login", validateLogin, async (req, res) => {
   const { userName, password } = req.body;
   console.log("userName:", userName);
+  console.log("password:", password);
 
   try {
-    const user = await User.findOne({ where: { userName, password } });
-    if (!user) {
-      console.log("Login failed");
-      res.status(401).send("Login failed");
-      return;
-    }
-
-    console.log("Login successful");
-    res.send({
-      text: "Login successful",
-      data: user,
+    const user = db.login(userName, password, (err, result) => {
+      if (err) {
+        console.log("Error:", err);
+        res.status(500).send("Login failed");
+        return;
+      }
+  
+      if (result.length === 0) {
+        console.log("Login failed");
+        res.status(401).send("Login failed");
+        return;
+      }
+  
+      console.log("Login successful");
+      res.send({text:"Login successful",
+          data: user
+      });
     });
   } catch (error) {
     console.log("Error:", error);

@@ -24,6 +24,12 @@ def log_response(response_text):
         file.write(f"Response text: {response_text}\n")
         print(f"Response text: {response_text}")
 
+def log_table_found(table_name, table_schema):
+    log_message(f"Table found: {table_name}, Schema: {table_schema}")
+
+def log_columns_found(url, columns):
+    log_message(f"Columns found for Form url: {url} - SQL columns: {columns}")
+
 def make_request(url):
     response = requests.get(url)
     log_response(response.text)
