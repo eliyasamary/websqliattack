@@ -11,10 +11,12 @@ def react_scraping(input_url):
 
     service = Service(executable_path=chromedriver_path)
 
-    # Initialize the WebDriver with the specified path
+    # For windows driver:
     driver = webdriver.Chrome(service=service)
 
-    # Open a webpage
+    # For linux driver:
+    # driver = webdriver.Chrome()
+
     driver.get(input_url)
     time.sleep(2)  # Wait for the page to load
     
@@ -26,7 +28,6 @@ def react_scraping(input_url):
         form_data = []
         input_fields = form.find_elements(By.TAG_NAME, "input")
         
-        # Collect form inputs and fill them if they are empty
         for input_field in input_fields:
             field_name = input_field.get_attribute("name")
             existing_value = input_field.get_attribute("value")
@@ -65,8 +66,6 @@ def react_scraping(input_url):
                     form_objects.append(temp_obj)
                     break  # Break after capturing the form submission request
 
-
-    # Close the browser
     driver.quit()
     
     return form_objects

