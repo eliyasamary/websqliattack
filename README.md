@@ -16,12 +16,12 @@ It was developed as part of a software security project and includes both offens
 - `pre-protecting/`: Vulnerable backend application (Node.js + MySQL).  
 - `post-protecting/`: Secured backend application with input validation and parameterized queries.  
 - `py-prod/`: Python modules for orchestrating attacks, scraping, and payload generation.  
-- `tutorial/`: Documentation and explanations (see [Tutorial PDF](./Tutorial-%20websqliattack.pdf)).  
+- `tutorial/`: Documentation and explanations (see [Tutorial PDF](./Tutorial_websqliattack.pdf)).  
 
 ## Installation
 
 ```bash
-git clone https://github.com/yourusername/websqliattack.git
+git clone https://github.com/eliyasamary/websqliattack
 cd websqliattack
 ```
 
@@ -71,7 +71,7 @@ The orchestrator will:
 ## Tutorial
 
 A full tutorial with step-by-step explanations is available here:  
-[📘 Tutorial - websqliattack](./Tutorial-%20websqliattack.pdf)
+[📘 Tutorial - websqliattack](./Tutorial_websqliattack.pdf)
 
 ## Disclaimer ⚠️
 
